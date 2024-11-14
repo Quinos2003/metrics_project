@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage Metrics Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'home.css' %}">
+</head>
+<body>
+
+<header>
+    <h1>Webpage Metrics Dashboard</h1>
+    <nav>
+        <a href="#home"><i class="fas fa-home"></i> Home</a>
+        <a href="#features">Features</a>
+        <a href="#cta">Get Started</a>
+        <a href="#contact">Contact</a>
+    </nav>
+</header>
+
+<section class="intro" id="home">
+    <h2>Welcome to the Webpage Metrics Project</h2>
+    <p>Analyze and visualize the metrics from any webpage effortlessly. Our tool provides insights that help you understand your content better!</p>
+</section>
+
+<section class="features" id="features">
+    <div class="feature">
+        <i class="fas fa-chart-line"></i>
+        <h3>Real-Time Analytics</h3>
+        <p>Get live data and metrics from any webpage, ensuring you have the latest insights at your fingertips.</p>
+    </div>
+    <div class="feature">
+        <i class="fas fa-user-friends"></i>
+        <h3>User-Friendly Interface</h3>
+        <p>Our intuitive design makes it easy for anyone to use, regardless of technical expertise.</p>
+    </div>
+    <div class="feature">
+        <i class="fas fa-file-alt"></i>
+        <h3>Custom Reports</h3>
+        <p>Create customized reports based on your specific needs and share them with your team or clients.</p>
+    </div>
+</section>
+
+<section class="cta" id="cta">
+    <h2>Ready to get started?</h2>
+    <p>Join us today and take your webpage analysis to the next level!</p>
+    <div class="button-container">
+        <a href="{% url 'webpage_metrics' %}" class="button">Test Page Quality</a>
+        <a href="{% url 'analyze_metrics' %}" class="button">Test Performance</a>
+        <a href="{% url 'final_score' %}" class="button">Get Score</a> <!-- New Button -->
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2024 Webpage Metrics Project. All Rights Reserved.</p>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,252 @@
+<!-- <!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage Metrics Results</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'metrics.css' %}">
+    <style>
+        .good { background-color: green; flex: 1; }
+        .ok { background-color: yellow; flex: 1; }
+        .worse { background-color: red; flex: 1; }
+        .metrics-table th, .metrics-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .metrics-table th {
+            background-color: #0056b3;
+            color: white;
+        }
+        .cta {
+            display: block;
+            margin: 20px auto;
+            width: fit-content;
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Metrics for {{ url }}</h1>
+
+    <table class="metrics-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Number of Links</td>
+                <td>{{ metrics.number_of_link }}</td>
+                <td class="{% if metrics.number_of_link_category == 'good' %}good{% elif metrics.number_of_link_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_link_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Body Text Words</td>
+                <td>{{ metrics.body_text_words }}</td>
+                <td class="{% if metrics.body_text_words_category == 'good' %}good{% elif metrics.body_text_words_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.body_text_words_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Number of Lists</td>
+                <td>{{ metrics.number_of_list }}</td>
+                <td class="{% if metrics.number_of_list_category == 'good' %}good{% elif metrics.number_of_list_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_list_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Number of Tables</td>
+                <td>{{ metrics.number_of_tables }}</td>
+                <td class="{% if metrics.number_of_tables_category == 'good' %}good{% elif metrics.number_of_tables_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_tables_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Page Title Length</td>
+                <td>{{ metrics.title_length }}</td>
+                <td class="{% if metrics.title_length_category == 'good' %}good{% elif metrics.title_length_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.title_length_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Page Size</td>
+                <td>{{ metrics.page_size }}</td>
+                <td class="{% if metrics.page_size_category == 'good' %}good{% elif metrics.page_size_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.page_size_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Number of Graphics</td>
+                <td>{{ metrics.graphics }}</td>
+                <td class="{% if metrics.graphics_category == 'good' %}good{% elif metrics.graphics_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.graphics_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Text Emphasis</td>
+                <td>{{ metrics.text_emphasis }}</td>
+                <td class="{% if metrics.text_emphasis_category == 'good' %}good{% elif metrics.text_emphasis_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.text_emphasis_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Number of Exclamations</td>
+                <td>{{ metrics.number_of_exclam }}</td>
+                <td class="{% if metrics.number_of_exclam_category == 'good' %}good{% elif metrics.number_of_exclam_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_exclam_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Number of Scripts</td>
+                <td>{{ metrics.number_of_script }}</td>
+                <td class="{% if metrics.number_of_script_category == 'good' %}good{% elif metrics.number_of_script_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_script_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Embedded Links</td>
+                <td>{{ metrics.embedded_links }}</td>
+                <td class="{% if metrics.embedded_links_category == 'good' %}good{% elif metrics.embedded_links_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.embedded_links_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Redirecting Links</td>
+                <td>{{ metrics.redirecting_links }}</td>
+                <td class="{% if metrics.redirecting_links_category == 'good' %}good{% elif metrics.redirecting_links_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.redirecting_links_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>In-Page Links</td>
+                <td>{{ metrics.in_page_link }}</td>
+                <td class="{% if metrics.in_page_link_category == 'good' %}good{% elif metrics.in_page_link_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.in_page_link_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Frames</td>
+                <td>{{ metrics.frames }}</td>
+                <td class="{% if metrics.frames_category == 'good' %}good{% elif metrics.frames_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.frames_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Total Number of Words</td>
+                <td>{{ metrics.number_of_words }}</td>
+                <td class="{% if metrics.number_of_words_category == 'good' %}good{% elif metrics.number_of_words_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_words_category|title }}
+                </td>
+            </tr>
+            <tr>
+                <td>Number of Meta Tags</td>
+                <td>{{ metrics.number_of_meta_tags }}</td>
+                <td class="{% if metrics.number_of_meta_tags_category == 'good' %}good{% elif metrics.number_of_meta_tags_category == 'ok' %}ok{% else %}worse{% endif %}">
+                    {{ metrics.number_of_meta_tags_category|title }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{% url 'webpage_metrics' %}" class="cta">Analyze another webpage</a>
+</div>
+
+</body>
+</html> -->
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage Metrics Results</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'metrics.css' %}">
+    <style>
+        /* Table Styles */
+        .metrics-table th, .metrics-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .metrics-table th {
+            background-color: #0056b3;
+            color: white;
+        }
+
+        /* Bar styles */
+        .bar {
+            height: 20px;
+            background-color: #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            width: 100%;
+        }
+        .bar-fill {
+            height: 100%;
+            color: rgb(0, 0, 0);
+            text-align: center;
+            padding-right: 10px;
+            border-radius: 5px;
+        }
+
+        /* CTA link styles (optional) */
+        .cta {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #0056b3;
+            color: rgb(0, 0, 0);
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .cta:hover {
+            background-color: #004494;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Metrics for {{ url }}</h1>
+
+    <table class="metrics-table">
+        <thead>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for metric, data in metrics.items %}
+            <tr>
+                <td>{{ metric|title }}</td>
+                <td>{{ data.value }}</td>
+                <td>
+                    <div class="bar">
+                        <div class="bar-fill" style=" background-color: {{ data.color }}">{{ data.category|title }}</div>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{% url 'webpage_metrics' %}" class="cta">Analyze another webpage</a>
+</div>
+
+</body>
+</html>

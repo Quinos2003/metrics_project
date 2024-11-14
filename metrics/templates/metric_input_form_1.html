@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webpage Metrics Input</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'metric_input_form.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Enter a URL for Metrics Analysis</h1>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <label for="url">URL:</label>
+                <input type="text" id="url" name="url" required placeholder="https://example.com">
+
+                <!-- Separate buttons for different actions -->
+                <button type="submit" name="action" value="performance">Analyze Performance</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

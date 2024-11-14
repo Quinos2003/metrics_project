@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Performance Metrics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+        .bar-container {
+            display: flex;
+            height: 20px;
+            width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .good { background-color: green; flex: 1; }
+        .ok { background-color: yellow; flex: 1; }
+        .worse { background-color: red; flex: 1; }
+        .category {
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+        }
+        /* Accordion Styles */
+        .accordion-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .accordion-item {
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .accordion-title {
+            background-color: #0056b3;
+            color: white;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .accordion-content {
+            padding: 10px;
+            display: none;
+            background-color: #f2f2f2;
+        }
+    </style>
+    <script>
+        function toggleAccordion(event) {
+            const content = event.currentTarget.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+    </script>
+</head>
+<body>
+
+<h1>Website Performance Metrics</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>LCP (s)</th>
+            <th>INP (ms)</th>
+            <th>CLS</th>
+            <th>FCP (s)</th>
+            <th>TTFB (s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics_data %}
+        <tr>
+            <td>{{ metric.url }}</td>
+            <td>
+                {{ metric.lcp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.lcp.category == 'GOOD' %}good{% elif metric.lcp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.lcp.category }}</div>
+            </td>
+            <td>
+                {{ metric.inp.value }}
+
+                <div class="bar-container">
+                    <div class="{% if metric.inp.category == 'GOOD' %}good{% elif metric.inp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.inp.category }}</div>
+            </td>
+            <td>
+                {{ metric.cls.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.cls.category == 'GOOD' %}good{% elif metric.cls.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.cls.category }}</div>
+            </td>
+            <td>
+                {{ metric.fcp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.fcp.category == 'GOOD' %}good{% elif metric.fcp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.fcp.category }}</div>
+            </td>
+            <td>
+                {{ metric.ttfb.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.ttfb.category == 'GOOD' %}good{% elif metric.ttfb.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.ttfb.category }}</div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<!-- <img src="data:image/png;base64,{{ graphic }}" alt="Metrics Plot" /> -->
+<div class="accordion-section">
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">1. Largest Contentful Paint (LCP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> LCP measures the time taken to load the largest visible content element, such as a large image or a video.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Optimize Images: Compress and serve images in next-gen formats (e.g., WebP).</li>
+                <li>Use Lazy Loading for off-screen images.</li>
+                <li>Minimize or defer CSS and JavaScript to reduce render-blocking.</li>
+                <li>Enable Caching for static assets.</li>
+                <li>Use a CDN to reduce server response time.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">2. Interaction to Next Paint (INP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> INP measures the responsiveness of the page in response to user interactions.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Minimize JavaScript execution and break tasks into smaller, non-blocking tasks.</li>
+                <li>Use Web Workers to offload heavy computations.</li>
+                <li>Defer or remove unused JavaScript.</li>
+                <li>Avoid excessive event listeners on frequently triggered events.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">3. Cumulative Layout Shift (CLS)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> CLS measures visual stability, particularly unexpected shifts.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Set explicit dimensions for images, videos, and iframes.</li>
+                <li>Reserve space for dynamic content to prevent shifts.</li>
+                <li>Use CSS <code>font-display: swap</code> for font loading.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">4. First Contentful Paint (FCP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> FCP measures the time for the first visual content to appear.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Minimize JavaScript execution until after FCP.</li>
+                <li>Optimize Critical Rendering Path for above-the-fold content.</li>
+                <li>Use Server-Side Rendering (SSR) for faster first visual content.</li>
+                <li>Minify and compress resources.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">5. Time to First Byte (TTFB)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> TTFB measures server response time.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Use a CDN to reduce latency.</li>
+                <li>Optimize server configuration and reduce response times.</li>
+                <li>Cache static and dynamic content.</li>
+                <li>Reduce database queries and optimize backend code.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Performance Metrics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+        .bar-container {
+            display: flex;
+            height: 20px;
+            width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .good { background-color: green; flex: 1; }
+        .ok { background-color: yellow; flex: 1; }
+        .worse { background-color: red; flex: 1; }
+        .category {
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+        }
+        /* Accordion Styles */
+        .accordion-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .accordion-item {
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .accordion-title {
+            background-color: #0056b3;
+            color: white;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .accordion-content {
+            padding: 10px;
+            display: none;
+            background-color: #f2f2f2;
+        }
+        /* Chart Container Styling */
+        .chart-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function toggleAccordion(event) {
+            const content = event.currentTarget.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+
+        window.onload = function() {
+            // Mean and actual values for the metrics
+            const meanValues = [4.92, 196.9, 2.173, 2.47, 1.33];
+            const actualValues = [
+            5.2,
+            {{ metrics_data.inp.value }},
+            {{ metrics_data.cls.value }},
+            {{ metrics_data.fcp.value }},
+            {{ metrics_data.ttfb.value }}
+        ];
+
+            // Create the Chart
+            const ctx = document.getElementById('metricsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['LCP (s)', 'INP (ms)', 'CLS', 'FCP (s)', 'TTFB (s)'],
+                    datasets: [
+                        {
+                            label: 'Mean Values',
+                            data: meanValues,
+                            borderColor: 'blue',
+                            backgroundColor: 'rgba(0, 86, 179, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        },
+                        {
+                            label: 'Actual URL Values',
+                            data: actualValues,
+                            borderColor: 'red',
+                            backgroundColor: 'rgba(255, 99, 132, 0.1)',
+                            borderWidth: 2,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Comparison of Mean vs. Actual URL Values for Key Metrics' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<h1>Website Performance Metrics</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>LCP (s)</th>
+            <th>INP (ms)</th>
+            <th>CLS</th>
+            <th>FCP (s)</th>
+            <th>TTFB (s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics_data %}
+        <tr>
+            <td>{{ metric.url }}</td>
+            <td>
+                {{ metric.lcp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.lcp.category == 'GOOD' %}good{% elif metric.lcp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.lcp.category }}</div>
+            </td>
+            <td>
+                {{ metric.inp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.inp.category == 'GOOD' %}good{% elif metric.inp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.inp.category }}</div>
+            </td>
+            <td>
+                {{ metric.cls.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.cls.category == 'GOOD' %}good{% elif metric.cls.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.cls.category }}</div>
+            </td>
+            <td>
+                {{ metric.fcp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.fcp.category == 'GOOD' %}good{% elif metric.fcp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.fcp.category }}</div>
+            </td>
+            <td>
+                {{ metric.ttfb.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.ttfb.category == 'GOOD' %}good{% elif metric.ttfb.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.ttfb.category }}</div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="chart-container">
+    <canvas id="metricsChart"></canvas>
+</div>
+
+<div class="accordion-section">
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">1. Largest Contentful Paint (LCP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> LCP measures the time taken to load the largest visible content element, such as a large image or a video.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Optimize Images: Compress and serve images in next-gen formats (e.g., WebP).</li>
+                <li>Use Lazy Loading for off-screen images.</li>
+                <li>Minimize or defer CSS and JavaScript to reduce render-blocking.</li>
+                <li>Enable Caching for static assets.</li>
+                <li>Use a CDN to reduce server response time.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">2. Interaction to Next Paint (INP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> INP measures the responsiveness of the page in response to user interactions.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Minimize JavaScript execution and break tasks into smaller, non-blocking tasks.</li>
+                <li>Use Web Workers to offload heavy computations.</li>
+                <li>Defer or remove unused JavaScript.</li>
+                <li>Avoid excessive event listeners on frequently triggered events.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">3. Cumulative Layout Shift (CLS)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> CLS measures visual stability, particularly unexpected shifts.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Set explicit dimensions for images, videos, and iframes.</li>
+                <li>Reserve space for dynamic content to prevent shifts.</li>
+                <li>Use CSS <code>font-display: swap</code> for font loading.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">4. First Contentful Paint (FCP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> FCP measures the time taken for the first piece of content to appear on screen.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Minimize main thread work by optimizing CSS and JavaScript.</li>
+                <li>Serve static assets from a CDN.</li>
+                <li>Reduce the time spent on network requests by using caching.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">5. Time to First Byte (TTFB)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> TTFB measures the time taken for the server to respond to the initial request.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Enable server-side caching for frequently requested data.</li>
+                <li>Use a CDN to reduce latency and improve response times.</li>
+                <li>Optimize server-side code to reduce processing time.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html> -->
+<!-- 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Performance Metrics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #0056b3;
+            color: white;
+        }
+        .bar-container {
+            display: flex;
+            height: 20px;
+            width: 100%;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .good { background-color: green; flex: 1; }
+        .ok { background-color: yellow; flex: 1; }
+        .worse { background-color: red; flex: 1; }
+        .category {
+            font-weight: bold;
+            text-align: center;
+            padding: 4px;
+        }
+        /* Accordion Styles */
+        .accordion-section {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .accordion-item {
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .accordion-title {
+            background-color: #0056b3;
+            color: white;
+            padding: 12px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .accordion-content {
+            padding: 10px;
+            display: none;
+            background-color: #f2f2f2;
+        }
+        /* Chart Container Styling */
+        .chart-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        function toggleAccordion(event) {
+            const content = event.currentTarget.nextElementSibling;
+            content.style.display = content.style.display === 'block' ? 'none' : 'block';
+        }
+
+        window.onload = function() {
+            // Mean and actual values for the metrics
+            const meanValues = [4.92, 196.9, 2.173, 2.47, 1.33];
+            const actualValues = [5.2, {{ metrics_data.inp.value }}, {{ metrics_data.cls.value }}, {{ metrics_data.fcp.value }}, {{ metrics_data.ttfb.value }}];
+
+            // Create the Chart
+            const ctx = document.getElementById('metricsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['LCP (s)', 'INP (ms)', 'CLS', 'FCP (s)', 'TTFB (s)'],
+                    datasets: [
+                        {
+                            label: 'Mean Values',
+                            data: meanValues,
+                            borderColor: 'orange',
+                            backgroundColor: 'rgba(255, 165, 0, 0.2)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'orange',
+                            pointRadius: 5,
+                            fill: false
+                        },
+                        {
+                            label: 'Actual URL Values',
+                            data: actualValues,
+                            borderColor: 'purple',
+                            backgroundColor: 'rgba(128, 0, 128, 0.2)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'purple',
+                            pointRadius: 5,
+                            fill: false
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'top' },
+                        title: { display: true, text: 'Comparison of Mean vs. Actual URL Values for Key Metrics' }
+                    },
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+
+<h1>Website Performance Metrics</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>URL</th>
+            <th>LCP (s)</th>
+            <th>INP (ms)</th>
+            <th>CLS</th>
+            <th>FCP (s)</th>
+            <th>TTFB (s)</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for metric in metrics_data %}
+        <tr>
+            <td>{{ metric.url }}</td>
+            <td>
+                {{ metric.lcp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.lcp.category == 'GOOD' %}good{% elif metric.lcp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.lcp.category }}</div>
+            </td>
+            <td>
+                {{ metric.inp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.inp.category == 'GOOD' %}good{% elif metric.inp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.inp.category }}</div>
+            </td>
+            <td>
+                {{ metric.cls.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.cls.category == 'GOOD' %}good{% elif metric.cls.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.cls.category }}</div>
+            </td>
+            <td>
+                {{ metric.fcp.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.fcp.category == 'GOOD' %}good{% elif metric.fcp.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.fcp.category }}</div>
+            </td>
+            <td>
+                {{ metric.ttfb.value }}
+                <div class="bar-container">
+                    <div class="{% if metric.ttfb.category == 'GOOD' %}good{% elif metric.ttfb.category == 'OK' %}ok{% else %}worse{% endif %}"></div>
+                </div>
+                <div class="category">{{ metric.ttfb.category }}</div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="chart-container">
+    <canvas id="metricsChart"></canvas>
+</div>
+
+<div class="accordion-section">
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">1. Largest Contentful Paint (LCP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> LCP measures the time taken to load the largest visible content element, such as a large image or a video.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Optimize Images: Compress and serve images in next-gen formats (e.g., WebP).</li>
+                <li>Use Lazy Loading for off-screen images.</li>
+                <li>Minimize or defer CSS and JavaScript to reduce render-blocking.</li>
+                <li>Enable Caching for static assets.</li>
+                <li>Use a CDN to reduce server response time.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">2. Interaction to Next Paint (INP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> INP measures the responsiveness of the page in response to user interactions.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Minimize JavaScript execution and break tasks into smaller, non-blocking tasks.</li>
+                <li>Use Web Workers to offload heavy computations.</li>
+                <li>Defer or remove unused JavaScript.</li>
+                <li>Avoid excessive event listeners on frequently triggered events.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">3. Cumulative Layout Shift (CLS)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> CLS measures visual stability, particularly unexpected shifts.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Set explicit dimensions for images, videos, and iframes.</li>
+                <li>Reserve space for dynamic content to prevent shifts.</li>
+                <li>Use CSS <code>font-display: swap</code> for font loading.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">4. First Contentful Paint (FCP)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> FCP measures the time taken for the first piece of content to appear on screen.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Minimize main thread work by optimizing CSS and JavaScript.</li>
+                <li>Serve static assets from a CDN.</li>
+                <li>Reduce the time spent on network requests by using caching.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <div class="accordion-title" onclick="toggleAccordion(event)">5. Time to First Byte (TTFB)</div>
+        <div class="accordion-content">
+            <p><strong>Problem:</strong> TTFB measures the time taken for the server to respond to the initial request.</p>
+            <p><strong>Improvements:</strong></p>
+            <ul>
+                <li>Enable server-side caching for frequently requested data.</li>
+                <li>Use a CDN to reduce latency and improve response times.</li>
+                <li>Optimize server-side code to reduce processing time.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html> -->

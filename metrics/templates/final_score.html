@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Score Analysis</title>
+    <link rel="stylesheet" href="{% static 'css/final_score.css' %}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        .container {
+            max-width: 900px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        p {
+            font-size: 18px;
+            color: #555;
+        }
+        .score-summary {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .score-bar {
+            position: relative;
+            height: 30px;
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 15px;
+            margin-top: 15px;
+        }
+        .score-fill {
+            height: 100%;
+            border-radius: 15px;
+            transition: width 0.5s ease;
+        }
+        .category {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .good {
+            color: green;
+        }
+        .ok {
+            color: orange;
+        }
+        .worse {
+            color: red;
+        }
+        .score-summary h2 {
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .container p strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Website Performance Score</h1>
+        <p><strong>URL:</strong> {{ url }}</p>
+
+        <div class="score-summary">
+            <h2>Total Score: {{ total_score }}</h2>
+            <div class="score-bar">
+                <div class="score-fill" style="width: {{ total_score }}%; background-color: {% if category == 'Good' %} green {% elif category == 'Ok' %} orange {% else %} red {% endif %};"></div>
+            </div>
+            <p class="category {% if category == 'Good' %} good {% elif category == 'Ok' %} ok {% else %} worse {% endif %}">{{ category }}</p>
+        </div>
+    </div>
+</body>
+</html>
